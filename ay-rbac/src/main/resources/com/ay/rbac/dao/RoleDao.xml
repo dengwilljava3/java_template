@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.rbac.dao.RoleDao">
+
+	<select id="selectByDepartmentIdAndUsername" resultType="com.ay.rbac.entity.Role">
+		SELECT r.* FROM r_user u 
+		INNER JOIN r_user_role ur ON u.id = ur.r_user_id
+		INNER JOIN r_role r ON ur.r_role_id = r.id
+		INNER JOIN r_department_role dr ON r.id = dr.r_role_id
+		<where>
+			<if test="username != null and username != ''">
+				and u.username = #{username}
+			</if>
+			<if test="departmentId != null">
+				and dr.r_department_id = #{departmentId}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByUsername" resultType="com.ay.rbac.entity.Role">
+		SELECT r.* FROM r_user u
+		INNER JOIN r_user_role ur ON u.id=ur.r_user_id
+		INNER JOIN r_role r ON ur.r_role_id=r.id
+		WHERE u.username=#{username}
+	</select>
+	
+	<select id="selectRoleIdByUserId">
+		SELECT r_role_id FROM r_user_role WHERE r_user_id = #{userId}
+	</select>
+	
+	<select id="getAllRoleVo" resultType="com.ay.rbac.vo.QRoleVo">
+		SELECT r.id, r.name, r.memo, r.create_time createTime, r.update_time updateTime, rm.r_menu_id menuId
+		FROM r_role r 
+		INNER JOIN r_role_menu rm ON r.id = rm.r_role_id 
+	</select>
+	
+	<select id="selectByDepartmentId" resultType="com.ay.rbac.entity.Role">
+		SELECT r.* FROM r_role r
+		INNER JOIN r_department_role dr ON r.id = dr.r_role_id
+		WHERE dr.r_department_id = #{departmentId} 
+	</select>
+	
+	<select id="selectRoleIdByDepartmentIds" resultType="java.lang.Long">
+		SELECT r_role_id
+		FROM r_department_role dr
+		<where>
+			r_department_id IN 
+			<foreach collection="departmentIds" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</select>
+	
+	<insert id="insertUserRoles">
+		INSERT INTO r_user_role(r_user_id, r_role_id) VALUES
+		<foreach collection="roleIds" item="roleId" separator=",">
+			(#{userId}, #{roleId})
+		</foreach>
+	</insert>
+	<insert id="saveDepartmentRole">
+		INSERT INTO r_department_role(r_department_id, r_role_id) VALUES (#{departmentId}, #{roleId})
+	</insert>
+	
+	<insert id="insertRoleMenus">
+		INSERT INTO r_role_menu(r_role_id, r_menu_id) VALUES 
+		<foreach collection="menuIds" item="menuId" separator=",">
+			(#{roleId}, #{menuId})
+		</foreach>
+	</insert>
+
+	<delete id="deleteRoleIdsByUserId">
+		DELETE FROM r_user_role WHERE r_user_id = #{userId}
+	</delete>
+	
+	<delete id="deleteUserRoleByRoleId">
+		DELETE FROM r_user_role WHERE r_role_id = #{roleId}
+	</delete>
+	
+	<delete id="deleteDepartmentRoleByDepartmentIdAndRoleId">
+		DELETE FROM r_department_role 
+		<where>
+			<if test="roleId != null">
+				r_role_id = #{roleId}
+			</if>
+			<if test="departmentId != null">
+				r_department_id = #{departmentId}
+			</if>
+		</where>
+	</delete>
+	
+	<delete id="deleteByIds">
+		DELETE FROM r_role 
+		<where>
+			id IN 
+			<foreach collection="roleIds" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</delete>
+	
+</mapper>

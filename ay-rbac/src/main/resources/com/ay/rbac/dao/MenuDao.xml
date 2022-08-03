@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.rbac.dao.MenuDao">
+
+	<select id="selectByRoleIds" resultType="com.ay.rbac.entity.Menu">
+		SELECT m.*
+		FROM r_role r 
+		INNER JOIN r_role_menu rm ON r.id = rm.r_role_id
+		INNER JOIN r_menu m ON rm.r_menu_id = m.id
+		WHERE r.id IN 
+		<foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+			#{roleId}
+		</foreach>
+	</select>
+	
+	<select id="selectParentByChildIds" resultType="com.ay.rbac.entity.Menu">
+		SELECT DISTINCT p.* 
+		FROM r_menu r 
+		INNER JOIN  r_menu p ON r.parent_id = p.id
+		WHERE r.id IN 
+		<foreach collection="childMenuIds" item="menuId" open="(" close=")" separator=",">
+			#{menuId}
+		</foreach>
+	</select>
+	
+	<delete id="deleteMenuIdsByRoleId">
+		DELETE FROM r_role_menu WHERE r_role_id = #{roleId}
+	</delete>
+	
+	<delete id="deleteRoleMenuByRoleId">
+		DELETE FROM r_role_menu WHERE r_role_id = #{roleId}
+	</delete>
+	
+	<delete id="deleteRoleMenuByMenuId">
+		DELETE FROM r_role_menu WHERE r_menu_id = #{menuId}
+	</delete>
+	
+	<insert id="insertRoleMenus">
+		INSERT INTO r_role_menu(r_role_id, r_menu_id) VALUES 
+		<foreach collection="menuIds" item="menuId" separator=",">
+			(#{roleId}, #{menuId})
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.rbac.dao.UserDao">
+
+	<select id="selectByRoleId" resultType="com.ay.rbac.entity.User">
+		SELECT u.* FROM r_user u 
+		INNER JOIN r_user_role ur ON u.id = ur.r_user_id
+		INNER JOIN r_role r ON ur.r_role_id = r.id
+		WHERE ur.r_role_id = #{roleId}
+	</select>
+	
+	<select id="findByUsernameOrName" resultType="com.ay.rbac.vo.UserVo">
+		select * from r_user where 1=1 
+		<if test="username != null and username != ''">
+			and username like #{username}
+		</if>
+		<if test="name != null and name != ''">
+			and name like #{name}
+		</if>
+	</select>
+
+	<select id="queryDepartmentUsers" resultType="com.ay.rbac.vo.UserVo">
+		SELECT DISTINCT ru.* from r_user ru
+		INNER JOIN r_user_department rd ON ru.id = rd.r_user_id
+		<where>
+			<if test="ids != null and ids.size > 0">
+				rd.r_department_id IN
+				<foreach collection="ids" item="id" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+			<if test="username != null || username != ''">
+				OR ru.username = #{username}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectDistinctSiteId">
+		SELECT DISTINCT site_id FROM user
+	</select>
+	
+	<select id="selectBySessionId" resultType="com.ay.rbac.entity.User">
+		SELECT u.* 
+		FROM r_user u
+		INNER JOIN r_session s ON u.username = s.username
+		<where>
+			<if test="sessionId != null and sessionId != ''">
+				AND s.session_id = #{sessionId}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

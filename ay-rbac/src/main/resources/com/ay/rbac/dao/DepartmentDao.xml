@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.rbac.dao.DepartmentDao">
+
+	<select id="selectByUsername" resultType="com.ay.rbac.entity.Department">
+		SELECT d.* FROM r_department d
+		INNER JOIN r_user_department ud ON d.id = ud.r_department_id
+		INNER JOIN r_user u ON u.id = ud.r_user_id
+		WHERE u.username = #{username} 
+	</select>
+	
+	<select id="selectByRoleId" resultType="com.ay.rbac.entity.Department">
+		SELECT d.*
+		FROM r_department d 
+		INNER JOIN r_department_role dr ON d.id = dr.r_department_id
+		WHERE dr.r_role_id = #{roleId}
+	</select>
+	
+	<insert id="insertUserDepartment">
+		INSERT INTO r_user_department(r_user_id, r_department_id) VALUES 
+		<foreach collection="departmentIds" item="departmentId" separator=",">
+			(#{userId}, #{departmentId})
+		</foreach>
+	</insert>
+	
+	<update id="changeDepartmentIds">
+		UPDATE r_user_department SET r_department_id = #{newDepartmentId}
+		<where>
+			r_department_id IN 
+			<foreach collection="oldDepartmentIds" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</update>
+	
+	<delete id="deleteDepartmentUserByDepartmentIdAndUserId">
+		DELETE FROM r_user_department 
+		<where>
+			<if test="userId != null">
+				r_user_id = #{userId}
+			</if>
+			<if test="departmentId != null">
+				r_department_id = #{departmentId}
+			</if>
+		</where>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.rbac.dao.ClientDao">
+
+	<select id="selectByUsername" resultType="com.ay.rbac.entity.Client">
+		SELECT c.* FROM r_client c
+		INNER JOIN r_client_user cu ON c.id = cu.client_id
+		INNER JOIN r_user u ON cu.user_id = u.id
+		WHERE u.username = #{username} 
+	</select>
+	
+	<insert id="insertClientUser">
+		INSERT INTO r_client_user(client_id, user_id) VALUES(#{clientId}, #{userId})
+	</insert>
+	
+</mapper>

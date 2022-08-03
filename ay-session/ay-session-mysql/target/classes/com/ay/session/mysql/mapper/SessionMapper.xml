@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ay.session.mysql.mapper.SessionMapper">
+  <resultMap id="BaseResultMap" type="com.ay.session.mysql.entity.Session">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="session_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="last_request_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="timeout" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="privileged" javaType="java.lang.Byte" jdbcType="TINYINT" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, session_id, username, last_request_time, timeout, privileged
+  </sql>
+  <select id="selectByExample" parameterType="com.ay.session.mysql.entity.SessionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from r_session
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from r_session
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from r_session
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ay.session.mysql.entity.SessionExample">
+    delete from r_session
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ay.session.mysql.entity.Session">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_session (session_id, username, last_request_time, 
+      timeout, privileged)
+    values (#{sessionId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{lastRequestTime,jdbcType=TIMESTAMP}, 
+      #{timeout,jdbcType=TINYINT}, #{privileged,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ay.session.mysql.entity.Session">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into r_session
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sessionId != null">
+        session_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="lastRequestTime != null">
+        last_request_time,
+      </if>
+      <if test="timeout != null">
+        timeout,
+      </if>
+      <if test="privileged != null">
+        privileged,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sessionId != null">
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="lastRequestTime != null">
+        #{lastRequestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeout != null">
+        #{timeout,jdbcType=TINYINT},
+      </if>
+      <if test="privileged != null">
+        #{privileged,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ay.session.mysql.entity.SessionExample" resultType="java.lang.Long">
+    select count(*) from r_session
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update r_session
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.sessionId != null">
+        session_id = #{record.sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastRequestTime != null">
+        last_request_time = #{record.lastRequestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.timeout != null">
+        timeout = #{record.timeout,jdbcType=TINYINT},
+      </if>
+      <if test="record.privileged != null">
+        privileged = #{record.privileged,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update r_session
+    set id = #{record.id,jdbcType=BIGINT},
+      session_id = #{record.sessionId,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      last_request_time = #{record.lastRequestTime,jdbcType=TIMESTAMP},
+      timeout = #{record.timeout,jdbcType=TINYINT},
+      privileged = #{record.privileged,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ay.session.mysql.entity.Session">
+    update r_session
+    <set>
+      <if test="sessionId != null">
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="lastRequestTime != null">
+        last_request_time = #{lastRequestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeout != null">
+        timeout = #{timeout,jdbcType=TINYINT},
+      </if>
+      <if test="privileged != null">
+        privileged = #{privileged,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ay.session.mysql.entity.Session">
+    update r_session
+    set session_id = #{sessionId,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      last_request_time = #{lastRequestTime,jdbcType=TIMESTAMP},
+      timeout = #{timeout,jdbcType=TINYINT},
+      privileged = #{privileged,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
