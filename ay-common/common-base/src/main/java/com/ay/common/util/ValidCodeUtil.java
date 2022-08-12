@@ -35,7 +35,6 @@ public class ValidCodeUtil {
 		saveString(width, height, str, random, g);
 		saveLine(width, height, random, g);
 		saveImage(image, "jpg", out);
-		System.out.println("生成验证码成功！");
 	}
 
 	private static void saveImage(BufferedImage img, String jpg, OutputStream out) throws Exception {
