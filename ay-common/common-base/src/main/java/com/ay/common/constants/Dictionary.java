@@ -71,8 +71,10 @@ public interface Dictionary {
 		ACTIVITY_COUNT("activity_person", "推广人数活动"), //
 		RATE_MONEY("rate_money", "一级推荐奖励"), //
 		RATE_MONEY2("rate_money2", "二级推荐奖励"), //
+		RATE_MONEY3("rate_money3", "三级推荐奖励"), //
 		RATE_COUNT("rate_count", "一级推荐返利"), //
 		RATE_COUNT2("rate_count2", "二级推荐返利"), //
+		RATE_COUNT3("rate_count3", "三级推荐返利"), //
 		RELEASE_MONEY("release_money", "返利金额"), //
 		THREE_RELEASE("three_release", "三日返利金额"), //
 		RELEASE_MONEY_BY_CHILD("RELEASE_MONEY_BY_CHILD", "下级激活奖励"), //
@@ -90,7 +92,12 @@ public interface Dictionary {
 		PROMISE_MONEY("promise_money", "保证金"), //
 		CHANGE("change", "兑换"), //
 		AUDIT_FAILED("audit_failed", "审核退款"), //
-		RELEASE_PROMISE_MONEY("release_promise_money", "释放保证金");
+		RELEASE_PROMISE_MONEY("release_promise_money", "释放保证金"),
+
+		MANUAL_CHARGE("manual_charge", "人工上分"), //
+		MANUAL_WITHDRAW("manual_withdraw", "人工下分"), //
+		GIFT_MONEY("gift_money", "上分赠送"), //
+		REAL_VERIFY_REWARD("real_verify_reward", "实名认证奖励");
 
 		private String key;
 		private String value;
