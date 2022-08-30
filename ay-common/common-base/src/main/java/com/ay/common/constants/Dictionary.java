@@ -257,7 +257,8 @@ public interface Dictionary {
 	public enum PayType {
 		MONEY(0, "余额支付"), //
 		WECHAT(1, "微信支付"), //
-		ALIPAY(2, "支付宝");
+		ALIPAY(2, "支付宝"),
+		MANUALLY(9, "后台上分");
 
 		private Integer key;
 		private String value;
