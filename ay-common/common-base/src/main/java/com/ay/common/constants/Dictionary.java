@@ -97,7 +97,8 @@ public interface Dictionary {
 		MANUAL_CHARGE("manual_charge", "人工上分"), //
 		MANUAL_WITHDRAW("manual_withdraw", "人工下分"), //
 		GIFT_MONEY("gift_money", "上分赠送"), //
-		REAL_VERIFY_REWARD("real_verify_reward", "实名认证奖励");
+		REAL_VERIFY_REWARD("real_verify_reward", "实名认证奖励"),
+		PRODUCT_BACK("product_back", "产品回购");
 
 		private String key;
 		private String value;
